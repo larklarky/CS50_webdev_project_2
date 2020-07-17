@@ -11,6 +11,8 @@ class Category(models.Model):
     name = models.CharField(max_length = 255, blank = False)
     parent = models.ForeignKey('self', null = True, blank = True, related_name = 'children', on_delete = models.CASCADE)
 
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 class Listing(models.Model):
     STATUS = [
