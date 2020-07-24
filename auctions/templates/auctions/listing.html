@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <p>{{listing.category.parent}} > {{listing.category}}</p>
+    <div class='item-container'>
+        <div class='img-container'>
+            <img class='listing-img' src="{{ listing.image.url }}"/>
+        </div>
+        <div class='info-container'>
+            <h2>{{ listing.title }}</h2>
+            <p>Valid until: {{ listing.valid_until }}</p> 
+            <h3>{{ listing.price }}$</h3>
+        </div>
+    </div>
+
+    
+    
+    
+
+    
+{% endblock %}

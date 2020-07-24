@@ -29,6 +29,8 @@ class Listing(models.Model):
     valid_until = models.DateTimeField()
     category = models.ForeignKey('Category', on_delete = models.CASCADE, related_name = 'listings')
     status = models.CharField(max_length = 10, choices = STATUS, default = 'ACTIVE')
+    user = models.ForeignKey('User', on_delete = models.CASCADE, related_name = 'listings')
+
 
 
 class Bid(models.Model):

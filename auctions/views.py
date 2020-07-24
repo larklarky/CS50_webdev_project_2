@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import Listing, User
 
 
 def index(request):
@@ -61,3 +61,13 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+
+def listing(request, listing_id):
+    listing = Listing.objects.get(id = listing_id)
+    time_left = listing.valid_until - listing.date_created
+    print('category', listing.category)
+    return render(request, "auctions/listing.html", {
+        "listing": listing
+    })
+

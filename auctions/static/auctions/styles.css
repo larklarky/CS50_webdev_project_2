@@ -1,3 +1,28 @@
 body {
     padding: 10px;
 }
+
+.img-container {
+    display: inline-block;
+    width: 400px;
+    height: 600px;
+    margin-right: 1rem;
+}
+
+.listing-img {
+    width: 100%;
+    height: auto;
+}
+
+.info-container {
+    margin-left: 8rem;
+}
+
+.info-container > h2 {
+    margin-bottom: 1rem;
+}
+
+.item-container {
+    display: inline-flex;
+    margin: 2rem;
+}
