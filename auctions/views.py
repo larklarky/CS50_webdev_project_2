@@ -66,8 +66,10 @@ def register(request):
 def listing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
     time_left = listing.valid_until - listing.date_created
-    print('category', listing.category)
+    bids_counter = listing.bids.count()
+    print('category', listing.category, )
     return render(request, "auctions/listing.html", {
-        "listing": listing
+        "listing": listing,
+        'bids': bids_counter,
     })
 

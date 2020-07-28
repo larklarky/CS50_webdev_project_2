@@ -26,3 +26,61 @@ body {
     display: inline-flex;
     margin: 2rem;
 }
+
+
+
+.info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.price-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.price-tag {
+    margin-left: 2rem;
+}
+
+.bids {
+    margin-right: 2rem;
+}
+
+.bid-container {
+    background-color: rgb(235, 209, 178);
+    padding: 2rem;
+    margin-top: 1rem;
+}
+
+.bid-form {
+    margin: 2rem;
+}
+
+#bid-form {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1rem;
+}
+
+
+label {
+    display: block;
+    text-transform: uppercase;
+    color: rgb(71, 71, 71);
+}
+
+.bid-button {
+    display: block;
+    background-color: #0097ba;
+    border: 0;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    color: white;
+    text-transform: uppercase;
+}
+
+
