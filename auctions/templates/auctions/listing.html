@@ -16,16 +16,26 @@
 
             <div class="bid-container">
                 <div class="price-info">
-                    <h3 class="price-tag">{{ listing.price }}$</h3>
+                    <h3 class="price-tag">{{ price }}$</h3>
                     <h4 class="bids"> {{ bids }} bids </h4>
                 </div>
                 
-                <form class="bid-form">
+                <form class="bid-form" method="POST">
+                    {% csrf_token %}
                     <label for='bid-form'>Your bid:</label>
-                    <input type='text' id='bid-form' name='bid-form'/>
-                    <button class="bid-button">Place bid</button>
+                    <input type='text' id='bid-form' name='bid'/>
+                    {% if user.is_authenticated %}
+                        <button class="bid-button" type="submit">Place bid</button>
+                    {% else %}
+                        <a class='bid-singin' href="{% url 'login' %}">Sing in to place bid</a>
+                    {% endif %}
                 </form>
                 
+            </div>
+
+            <div class="description-container">
+                <h5>Description</h5>
+                <p>{{listing.description}}</p>
             </div>
             
             

@@ -2,9 +2,23 @@ body {
     padding: 10px;
 }
 
+/* .item-container {
+    display: inline-flex;
+    margin: 2rem;
+} */
+
+.item-container {
+    display: grid;
+    margin: 2rem;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+
+}
+
+
 .img-container {
     display: inline-block;
-    width: 400px;
+    width: 450px;
     height: 600px;
     margin-right: 1rem;
 }
@@ -15,17 +29,14 @@ body {
 }
 
 .info-container {
-    margin-left: 8rem;
+    margin-left: 3rem;
+    margin-right: 2rem;
 }
 
 .info-container > h2 {
     margin-bottom: 1rem;
 }
 
-.item-container {
-    display: inline-flex;
-    margin: 2rem;
-}
 
 
 
@@ -81,6 +92,48 @@ label {
     font-size: 1rem;
     color: white;
     text-transform: uppercase;
+}
+
+.bid-singin {
+    display: block;
+    background-color: #0097ba;
+    border: 0;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.bid-singin:hover {
+    text-decoration: none;
+    background-color: #007994;
+    color: white;
+
+}
+
+.description-container {
+    margin-top: 2rem;
+}
+
+.description-container > h5 {
+    text-transform: uppercase;
+}
+
+.messages {
+    padding-left: 0;
+}
+
+.messages > li {
+    list-style-type: none;
+    padding: 1rem;
+}
+
+.messages .error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
 }
 
 
