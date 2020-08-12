@@ -7,6 +7,8 @@ body {
     margin: 2rem;
 } */
 
+/* Listing page */
+
 .item-container {
     display: grid;
     margin: 2rem;
@@ -137,3 +139,49 @@ label {
 }
 
 
+
+
+/* Create listing page */
+
+
+.create-title {
+
+    margin: 1rem 0 2rem 2rem;
+}
+
+.create_listing_form {
+    margin-left: 2rem;
+    margin-bottom: 3rem;
+}
+
+.create_listing_form > label {
+    text-transform: capitalize;
+}
+
+.create_listing_form > input {
+    margin-bottom: 2rem;
+    width: 50%;
+    padding: 0.25rem;
+}
+
+.create_listing_form > textarea, .create_listing_form > select {
+    margin-bottom: 2rem;
+}
+
+.create_listing_form > textarea {
+    width: 50%;
+}
+
+.create_listing_form > select {
+    margin-right: 0.5rem;
+    padding: 0.3rem;
+}
+
+.create-button {
+    display: block;
+    background-color: #0097ba;
+    color: white;
+    text-transform: uppercase;
+    padding: 0.7rem 1rem;
+    border: 0;
+}

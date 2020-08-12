@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -6,7 +7,7 @@ from django.urls import reverse
 from django.contrib import messages
 
 from .models import Listing, User, Bid
-from .forms import BidForm
+from .forms import BidForm, CreateListingForm
 
 
 
@@ -101,5 +102,32 @@ def listing(request, listing_id):
         "listing": listing,
         'bids': bids_counter,
         'price': price,
+    })
+
+@login_required(login_url="/login")
+def create_listing(request):
+    create_form = CreateListingForm()
+
+    if request.method == 'POST':
+        create_form = CreateListingForm(request.POST, request.FILES)
+        current_user = request.user
+
+        if create_form.is_valid():
+            title = create_form.cleaned_data['title']
+            description = create_form.cleaned_data['description']
+            image = create_form.cleaned_data['image']
+            category = create_form.cleaned_data['category']
+            valid_until = create_form.cleaned_data['valid_until']
+            price = create_form.cleaned_data['price']
+            user = current_user
+
+            new_listing = Listing(title = title, description = description, image = image, 
+            category = category, valid_until = valid_until, price = price, user = user)
+            new_listing.save()
+            listing_id = new_listing.id
+            return HttpResponseRedirect(reverse('listing', args=[listing_id]))       
+            
+    return render(request, 'auctions/create_listing.html', {
+        'create_form': create_form,
     })
 

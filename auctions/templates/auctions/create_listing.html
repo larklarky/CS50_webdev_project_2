@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        <h3 class='create-title'>Create a new listing</h3>
+
+        <form class="create_listing_form" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            {{ create_form }}
+            <button class='create-button' type="submit">Create listing</button>
+        </form>
+    {% else %}
+        <a class='bid-singin' href="{% url 'login' %}">Sing in to create a new listing</a>
+    {% endif %}
+
+{% endblock %}
