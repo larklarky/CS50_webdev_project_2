@@ -6,14 +6,17 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Listing, User, Bid
+from .models import Listing, User, Bid, Wishlist
 from .forms import BidForm, CreateListingForm
 
 
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Listing.objects.filter(status = 'ACTIVE').order_by('-date_created')
+    return render(request, "auctions/index.html", {
+        'listings': listings, 
+    })
 
 
 def login_view(request):
@@ -68,11 +71,23 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+
+
 def listing(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
     time_left = listing.valid_until - listing.date_created
     bids_counter = listing.bids.count()
+    user = request.user
     price = listing.price
+
+    try:
+        Wishlist.objects.get(user = user, listing = listing)
+    except Wishlist.DoesNotExist:
+        found_in_watchlist = False
+    else:
+        found_in_watchlist = True
+
+
     if bids_counter > 0:
         price = Bid.objects.filter(listing_id = listing_id).order_by('-bid')[0].bid
         # price = listing.bids.order_by('-bid')[0].bid
@@ -80,7 +95,6 @@ def listing(request, listing_id):
 
     if request.method == 'POST':
         bid_form = BidForm(request.POST)
-        user = request.user
 
         if bid_form.is_valid() and user.is_authenticated:
             bid = bid_form.cleaned_data['bid']
@@ -102,7 +116,10 @@ def listing(request, listing_id):
         "listing": listing,
         'bids': bids_counter,
         'price': price,
+        'found_in_watchlist': found_in_watchlist,
     })
+
+
 
 @login_required(login_url="/login")
 def create_listing(request):
@@ -131,3 +148,20 @@ def create_listing(request):
         'create_form': create_form,
     })
 
+
+@login_required(login_url="/login")
+def addToWatchlist(request, listing_id):
+    listing = Listing.objects.get(id = listing_id)
+    user = request.user
+    watchlist_item = Wishlist(listing = listing, user = user)
+    watchlist_item.save()
+    return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+
+
+@login_required(login_url="/login")
+def removeFromWatchlist(request, listing_id):
+    listing = Listing.objects.get(id = listing_id)
+    user = request.user
+    watchlist_item = Wishlist.objects.get(listing = listing, user = user)
+    watchlist_item.delete() 
+    return HttpResponseRedirect(reverse('listing', args=[listing_id]))

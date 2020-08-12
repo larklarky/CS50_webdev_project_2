@@ -37,9 +37,13 @@
                 <h5>Description</h5>
                 <p>{{listing.description}}</p>
             </div>
-            
-            
-            
+
+            {% if found_in_watchlist %}
+                <a href="{% url 'watchlist_delete' listing.id %}"><p>Remove from watchlist</p></a>
+            {% else %}
+            <a href="{% url 'watchlist_add' listing.id %}"><p>Add to watchlist</p></a>
+            {% endif %}
+
 
             
         </div>
