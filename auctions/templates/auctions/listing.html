@@ -8,42 +8,53 @@
         </div>
         <div class='info-container'>
             <h2>{{ listing.title }}</h2>
+            {% if listing.status == 'ACTIVE' and listing.user == user %} 
+                <a href="{% url 'close' listing.id %}"> <p>Close the auction</p> </a>
+            {% endif %}
 
             <div class='info'>
-                <p>Valid until: {{ listing.valid_until }}</p> 
+                {% if listing.status == 'ACTIVE'%}
+                    <p>Valid until: {{ listing.valid_until }}</p>
+                {% else %}
+                    <p class='info-closed'>Closed</p>
+                {% endif%}
                 <p>Seller: {{ listing.user }}</p>
             </div>
 
-            <div class="bid-container">
-                <div class="price-info">
-                    <h3 class="price-tag">{{ price }}$</h3>
-                    <h4 class="bids"> {{ bids }} bids </h4>
+            {% if listing.status == 'ACTIVE' %}
+                <div class="bid-container">
+                    <div class="price-info">
+                        <h3 class="price-tag">{{ price }}$</h3>
+                        <h4 class="bids"> {{ bids }} bids </h4>
+                    </div>
+                    
+                    <form class="bid-form" method="POST">
+                        {% csrf_token %}
+                        <label for='bid-form'>Your bid:</label>
+                        <input type='text' id='bid-form' name='bid'/>
+                        {% if user.is_authenticated %}
+                            <button class="bid-button" type="submit">Place bid</button>
+                        {% else %}
+                            <a class='bid-singin' href="{% url 'login' %}">Sing in to place bid</a>
+                        {% endif %}
+                    </form>
                 </div>
-                
-                <form class="bid-form" method="POST">
-                    {% csrf_token %}
-                    <label for='bid-form'>Your bid:</label>
-                    <input type='text' id='bid-form' name='bid'/>
-                    {% if user.is_authenticated %}
-                        <button class="bid-button" type="submit">Place bid</button>
-                    {% else %}
-                        <a class='bid-singin' href="{% url 'login' %}">Sing in to place bid</a>
-                    {% endif %}
-                </form>
-                
-            </div>
+            {% elif  user == winning_bid.user%}
+                <p class='message-won'>You have been won the auction with your last bid {{ winning_bid.bid }}$</p>
+            {% endif %}
 
             <div class="description-container">
                 <h5>Description</h5>
                 <p>{{listing.description}}</p>
             </div>
 
-            {% if found_in_watchlist %}
-                <a href="{% url 'watchlist_delete' listing.id %}"><p>Remove from watchlist</p></a>
-            {% else %}
-            <a href="{% url 'watchlist_add' listing.id %}"><p>Add to watchlist</p></a>
+            {% if listing.status == 'ACTIVE' %}
+                {% if found_in_watchlist %}
+                    <a href="{% url 'watchlist_delete' listing.id %}"><p>Remove from watchlist</p></a>
+                {% else %}
+                <a href="{% url 'watchlist_add' listing.id %}"><p>Add to watchlist</p></a>
+                {% endif %}
             {% endif %}
-
 
             
         </div>

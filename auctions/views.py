@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -14,8 +15,12 @@ from .forms import BidForm, CreateListingForm
 
 def index(request):
     listings = Listing.objects.filter(status = 'ACTIVE').order_by('-date_created')
+    paginator = Paginator(listings, 2)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, "auctions/index.html", {
-        'listings': listings, 
+        'page_obj': page_obj,
     })
 
 
@@ -79,17 +84,18 @@ def listing(request, listing_id):
     bids_counter = listing.bids.count()
     user = request.user
     price = listing.price
+    winning_bid = Bid.objects.filter(listing_id = listing_id).order_by('-bid').first()
 
     try:
         Wishlist.objects.get(user = user, listing = listing)
-    except Wishlist.DoesNotExist:
+    except (Wishlist.DoesNotExist, TypeError):
         found_in_watchlist = False
     else:
         found_in_watchlist = True
 
 
     if bids_counter > 0:
-        price = Bid.objects.filter(listing_id = listing_id).order_by('-bid')[0].bid
+        price = winning_bid.bid
         # price = listing.bids.order_by('-bid')[0].bid
 
 
@@ -110,6 +116,12 @@ def listing(request, listing_id):
                 new_bid = Bid(bid = bid, user = user, listing = listing)
                 new_bid.save()
                 listing = Listing.objects.get(id = listing_id)
+                messages.success(request, 'The bid is accepted.')
+
+                if found_in_watchlist == False:
+                    watchlist_item = Wishlist(listing = listing, user = user)
+                    watchlist_item.save()
+                    messages.success(request, 'The listing was added to your watchlist.')
         return HttpResponseRedirect(reverse('listing', args=[listing_id]))
 
     return render(request, "auctions/listing.html", {
@@ -117,6 +129,8 @@ def listing(request, listing_id):
         'bids': bids_counter,
         'price': price,
         'found_in_watchlist': found_in_watchlist,
+        'user': user,
+        'winning_bid': winning_bid,
     })
 
 
@@ -155,6 +169,7 @@ def addToWatchlist(request, listing_id):
     user = request.user
     watchlist_item = Wishlist(listing = listing, user = user)
     watchlist_item.save()
+    messages.success(request, 'The listing was added to your watchlist.') 
     return HttpResponseRedirect(reverse('listing', args=[listing_id]))
 
 
@@ -163,7 +178,8 @@ def removeFromWatchlist(request, listing_id):
     listing = Listing.objects.get(id = listing_id)
     user = request.user
     watchlist_item = Wishlist.objects.get(listing = listing, user = user)
-    watchlist_item.delete() 
+    watchlist_item.delete()
+    messages.success(request, 'The listing was removed from your watchlist.') 
     return HttpResponseRedirect(reverse('listing', args=[listing_id]))
 
 
@@ -174,3 +190,16 @@ def watchlist(request):
     return render(request, 'auctions/watchlist.html', {
         'watchlist': watchlist,
     })
+
+@login_required(login_url="/login")
+def closeListing(request, listing_id):
+    listing = Listing.objects.get(id = listing_id)
+    user = request.user
+
+    if user == listing.user:
+        listing.status = 'FINISHED'
+        listing.save()
+        messages.success(request, 'The listing was closed.')
+    else:
+        messages.error(request, 'You need to be author of listing to be able to close it')
+    return HttpResponseRedirect(reverse('listing', args=[listing_id]))

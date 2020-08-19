@@ -98,6 +98,17 @@ body {
     justify-content: space-between;
 }
 
+.info-closed {
+    color: red;
+}
+
+.message-won {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+    padding: 1rem;
+}
+
 .price-info {
     display: flex;
     flex-direction: row;
@@ -180,12 +191,19 @@ label {
 .messages > li {
     list-style-type: none;
     padding: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .messages .error {
     color: #a94442;
     background-color: #f2dede;
     border-color: #ebccd1;
+}
+
+.messages .success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
 }
 
 
