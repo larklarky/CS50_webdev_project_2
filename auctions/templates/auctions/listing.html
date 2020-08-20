@@ -60,6 +60,28 @@
         </div>
     </div>
 
+    <div class='comment-section-container'>
+        <div class="comment-section-header">
+            <h5 class='comment-section-title'>Comments</h5>
+            <p><a class="comment-add-link" href="{% url 'create_comment' listing.id %}">Write a comment</a></p>
+        </div>
+        
+        {% for comment in comments %}
+            <div class='comment-container'>
+                <div class='comment-info'>
+                    <p>By {{ comment.user }}</p>
+                    <p>{{ comment.date_created }}</p>
+                </div>
+                <div class="comment-text">
+                    <p>{{ comment.comment }}</p>
+
+                </div>
+
+
+            </div>     
+        {% endfor %}
+
+    </div>
     
     
     

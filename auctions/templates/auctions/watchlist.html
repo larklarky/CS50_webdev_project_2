@@ -3,22 +3,48 @@
 {% block body %}
 
 <h4>Watchlist</h4>
-{% for watchlist_item in watchlist %}
-    <div class='index-listing-container'>
-        <div class="index-img-container">
-            <img class='index-listing-img' src="{{ watchlist_item.listing.image.url }}"/>
-        </div>
-        <div class="index-listing-info">
-            <a href="{% url 'listing' watchlist_item.listing.id %}">
-                <h5>{{ watchlist_item.listing.title }}</h5>
-            </a>
-            <p>{{ watchlist_item.listing.description }}</p>
-            <p class="index-listing-price">Price: {{ watchlist_item.listing.price }}$</p>
-        </div>
-        
+{% if watchlist > 0 %}
+    {% for watchlist_item in page_obj %}
+        <div class='index-listing-container'>
+            <div class="index-img-container">
+                <img class='index-listing-img' src="{{ watchlist_item.listing.image.url }}"/>
+            </div>
+            <div class="index-listing-info">
+                <a href="{% url 'listing' watchlist_item.listing.id %}">
+                    <h5>{{ watchlist_item.listing.title }}</h5>
+                </a>
+                <p>{{ watchlist_item.listing.description }}</p>
+                <p class="index-listing-price">Price: {{ watchlist_item.listing.price }}$</p>
+            </div>
 
+        </div> 
+    {% endfor %}
+{% else %}
+    <p>You don't have any saved items in your watchlist.</p>
+    
+{% endif %}
 
+{% if watchlist > 0 %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+
+            <span class="current">
+                {{ page_obj.number }}
+                
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
     </div>
-{% endfor %}
+{% endif %}
+
+
 
 {% endblock %}

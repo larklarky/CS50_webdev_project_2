@@ -13,3 +13,8 @@ class CreateListingForm(forms.Form):
     category = forms.ModelChoiceField(queryset=Category.objects.all(), label='category')
     valid_until = forms.DateField(label='valid until', widget=forms.SelectDateWidget, initial=datetime.date.today)
     price = forms.DecimalField(label='price', min_value = 0.1)
+
+
+class CreateCommentForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea, label='text')
+    

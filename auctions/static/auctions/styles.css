@@ -207,6 +207,59 @@ label {
 }
 
 
+.comment-section-container {
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.comment-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin: 1rem;
+}
+
+.comment-info {
+    padding: 1rem;
+}
+
+.comment-text {
+    padding: 1rem;
+}
+
+.comment-section-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: solid 1px black;
+    margin-top: 6rem;
+
+} 
+
+.comment-section-header > p {
+    margin-right: 1rem;
+    background-color: #0097ba;
+    color: white;
+    padding: 5px 10px 5px 10px;
+}
+
+.comment-add-link {
+    text-decoration: none;
+    color: white;
+    
+}
+
+.comment-add-link:hover {
+    text-decoration: none;
+    color: white;
+}
+
+.comment-section-title {
+    padding-left: 1rem;
+}
+
+
+
+
 
 
 /* Create listing page */
@@ -253,3 +306,26 @@ label {
     padding: 0.7rem 1rem;
     border: 0;
 }
+
+
+
+
+ /* Create comment */
+
+ .create-comment-form {
+    margin-left: 2rem;
+    margin-bottom: 3rem;
+ }
+
+ .create-comment-form > label {
+    text-transform: capitalize;
+}
+
+.create-comment-form > textarea {
+    width: 50%;
+    margin-bottom: 2rem;
+}
+
+
+
+

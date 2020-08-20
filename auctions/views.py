@@ -7,8 +7,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Listing, User, Bid, Wishlist
-from .forms import BidForm, CreateListingForm
+from .models import Comment, Listing, User, Bid, Wishlist
+from .forms import BidForm, CreateListingForm, CreateCommentForm
 
 
 
@@ -85,6 +85,7 @@ def listing(request, listing_id):
     user = request.user
     price = listing.price
     winning_bid = Bid.objects.filter(listing_id = listing_id).order_by('-bid').first()
+    comments = Comment.objects.filter(listing_id = listing_id).order_by('-date_created')
 
     try:
         Wishlist.objects.get(user = user, listing = listing)
@@ -131,6 +132,7 @@ def listing(request, listing_id):
         'found_in_watchlist': found_in_watchlist,
         'user': user,
         'winning_bid': winning_bid,
+        'comments': comments,
     })
 
 
@@ -187,8 +189,13 @@ def removeFromWatchlist(request, listing_id):
 def watchlist(request):
     user = request.user
     watchlist = Wishlist.objects.filter(user = user)
+    
+    paginator = Paginator(watchlist, 2)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, 'auctions/watchlist.html', {
-        'watchlist': watchlist,
+        'page_obj': page_obj,
+        'watchlist': len(watchlist),
     })
 
 @login_required(login_url="/login")
@@ -203,3 +210,27 @@ def closeListing(request, listing_id):
     else:
         messages.error(request, 'You need to be author of listing to be able to close it')
     return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+
+
+@login_required(login_url="/login")
+def createComment(request, listing_id):
+    current_listing = Listing.objects.get(id = listing_id)
+    current_user = request.user
+    create_form = CreateCommentForm()
+
+    if request.method == 'POST':
+        create_form = CreateCommentForm(request.POST)
+        if create_form.is_valid():
+            comment = create_form.cleaned_data['comment']
+            user = current_user
+            listing = current_listing
+
+            new_comment = Comment(comment = comment, user = user, listing = listing)
+            new_comment.save()
+            messages.success(request, 'Comment was created') 
+            return HttpResponseRedirect(reverse('listing', args=[listing_id]))
+
+    return render(request, 'auctions/create_comment.html', {
+        'create_form': create_form,
+        'listing': current_listing,
+    })
