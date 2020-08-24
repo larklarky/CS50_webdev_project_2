@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
 
-from .models import Comment, Listing, User, Bid, Wishlist
+from .models import Category, Comment, Listing, User, Bid, Wishlist
 from .forms import BidForm, CreateListingForm, CreateCommentForm
 
 
@@ -233,4 +233,24 @@ def createComment(request, listing_id):
     return render(request, 'auctions/create_comment.html', {
         'create_form': create_form,
         'listing': current_listing,
+    })
+
+
+def categories(request):
+    category_id = request.GET.get('category_id')
+    categories_list = Category.objects.filter(parent = category_id)
+    listings = Listing.objects.filter(category = category_id).order_by('-date_created')
+    category = None
+    if category_id:
+        category = Category.objects.get(id = category_id)
+
+    paginator = Paginator(listings, 2)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'auctions/categories.html', {
+        'categories': categories_list,
+        'page_obj': page_obj,
+        'category': category,
     })
