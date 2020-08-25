@@ -3,7 +3,7 @@
 {% block body %}
 
 <h4>Watchlist</h4>
-{% if watchlist > 0 %}
+{% if paginator > 0 %}
     {% for watchlist_item in page_obj %}
         <div class='index-listing-container'>
             <div class="index-img-container">
@@ -24,7 +24,7 @@
     
 {% endif %}
 
-{% if watchlist > 0 %}
+{% if paginator > 1 %}
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}

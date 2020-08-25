@@ -32,23 +32,25 @@
     </div>
 {% endif %}
 
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-        {% endif %}
+{% if  page_obj%}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1&category_id={{category.id}}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}&category_id={{category.id}}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
 
-        <span class="current">
-            {{ page_obj.number }}
-            
+            <span class="current">
+                {{ page_obj.number }}
+                
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&category_id={{category.id}}">{{ page_obj.next_page_number }}</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&category_id={{category.id}}">last &raquo;</a>
+            {% endif %}
         </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
+    </div>
+{% endif %}
 
 {% endblock %}

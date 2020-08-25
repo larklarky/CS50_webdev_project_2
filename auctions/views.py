@@ -21,6 +21,7 @@ def index(request):
     page_obj = paginator.get_page(page_number)
     return render(request, "auctions/index.html", {
         'page_obj': page_obj,
+        'paginator': paginator.num_pages,
     })
 
 
@@ -195,7 +196,7 @@ def watchlist(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'auctions/watchlist.html', {
         'page_obj': page_obj,
-        'watchlist': len(watchlist),
+        'paginator': paginator.num_pages,
     })
 
 @login_required(login_url="/login")
@@ -253,4 +254,5 @@ def categories(request):
         'categories': categories_list,
         'page_obj': page_obj,
         'category': category,
+        'paginator': paginator.num_pages,
     })
