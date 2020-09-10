@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib import messages
+import datetime
 
 from .models import Category, Comment, Listing, User, Bid, Wishlist
 from .forms import BidForm, CreateListingForm, CreateCommentForm
@@ -14,8 +15,8 @@ from .forms import BidForm, CreateListingForm, CreateCommentForm
 
 
 def index(request):
-    listings = Listing.objects.filter(status = 'ACTIVE').order_by('-date_created')
-    paginator = Paginator(listings, 2)
+    listings = Listing.objects.filter(valid_until__gte = datetime.datetime.now(), status='ACTIVE').order_by('-date_created')
+    paginator = Paginator(listings, 5)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -191,7 +192,7 @@ def watchlist(request):
     user = request.user
     watchlist = Wishlist.objects.filter(user = user)
     
-    paginator = Paginator(watchlist, 2)
+    paginator = Paginator(watchlist, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'auctions/watchlist.html', {
@@ -245,7 +246,7 @@ def categories(request):
     if category_id:
         category = Category.objects.get(id = category_id)
 
-    paginator = Paginator(listings, 2)
+    paginator = Paginator(listings, 5)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

@@ -31,6 +31,9 @@ class Listing(models.Model):
     status = models.CharField(max_length = 10, choices = STATUS, default = 'ACTIVE')
     user = models.ForeignKey('User', on_delete = models.CASCADE, related_name = 'listings')
 
+    def __str__(self) -> str:
+        return f'{self.title}'
+
 
 
 class Bid(models.Model):

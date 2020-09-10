@@ -39,8 +39,10 @@
                         {% endif %}
                     </form>
                 </div>
-            {% elif  user == winning_bid.user%}
+            {% elif user == winning_bid.user%}
                 <p class='message-won'>You have been won the auction with your last bid {{ winning_bid.bid }}$</p>
+            {% elif  listing.status == 'FINISHED' and listing.user == user%}
+                <p class='message-won'>The winner is {{winning_bid.user}} with the bid {{ winning_bid.bid }}$</p>
             {% endif %}
 
             <div class="description-container">
@@ -65,21 +67,25 @@
             <h5 class='comment-section-title'>Comments</h5>
             <p><a class="comment-add-link" href="{% url 'create_comment' listing.id %}">Write a comment</a></p>
         </div>
-        
-        {% for comment in comments %}
-            <div class='comment-container'>
-                <div class='comment-info'>
-                    <p>By {{ comment.user }}</p>
-                    <p>{{ comment.date_created }}</p>
-                </div>
-                <div class="comment-text">
-                    <p>{{ comment.comment }}</p>
+        {% if comments %}
+            {% for comment in comments %}
+                <div class='comment-container'>
+                    <div class='comment-info'>
+                        <p>By {{ comment.user }}</p>
+                        <p>{{ comment.date_created }}</p>
+                    </div>
+                    <div class="comment-text">
+                        <p>{{ comment.comment }}</p>
 
-                </div>
+                    </div>
 
 
-            </div>     
-        {% endfor %}
+                </div>     
+            {% endfor %}
+        {% else %}
+                <p class='comment-message'>Be the first to comment this item.</p>
+        {% endif%}
+       
 
     </div>
     
